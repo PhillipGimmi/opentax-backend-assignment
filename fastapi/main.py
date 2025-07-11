@@ -11,7 +11,6 @@ import structlog
 import time
 from datetime import date
 import os
-
 # Configure structured logging
 structlog.configure(
     processors=[
@@ -42,18 +41,23 @@ app = FastAPI(
     redoc_url="/redoc" if os.getenv("ENVIRONMENT") != "production" else None,
 )
 
-# Add security middleware
+# Read allowed origin and hosts from env vars
+allowed_origin = os.getenv("ADDRESS", "http://localhost:3000")
+allowed_host = os.getenv("HOST", "localhost")
+
+# Apply CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://yourdomain.com"],  # Configure appropriately for production
-    allow_credentials=False,  # Changed from True to prevent security vulnerability
+    allow_origins=[allowed_origin],
+    allow_credentials=False,  # Avoids cross-origin cookie risks
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
+# Apply Trusted Host middleware
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=["localhost", "yourdomain.com"]  # Configure appropriately for production
+    allowed_hosts=[allowed_host]
 )
 
 # Pydantic models with proper validation
