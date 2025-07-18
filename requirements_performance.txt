@@ -1,0 +1,9 @@
+# Performance Optimization Dependencies
+psycopg2-binary==2.9.7
+psutil==5.9.5
+numpy==1.24.3
+pandas==2.0.3
+
+# Optional: For enhanced monitoring
+prometheus-client==0.17.1
+psycopg2-pool==1.1.0 
